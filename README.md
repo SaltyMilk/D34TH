@@ -1,4 +1,4 @@
-# War
+# D34TH
 Educational virus.
 
 :warning: PLEASE DON'T BE STUPID: DO NOT RUN THIS ON YOUR SYSTEM. :warning:
@@ -28,8 +28,8 @@ So when ls gets infected every time you'll do a "ls", you're infecting your whol
 # Run in docker (note : due to ducker's way of things, anti debugger feature might fail in docker...Prefer using a VM)
 ```
 ./run.sh
-docker exec -it war /bin/bash 
-cd /war; make
+docker exec -it death /bin/bash 
+cd /death; make
 ```
 # Run locally
 ```
