@@ -11,16 +11,16 @@
 # **************************************************************************** #
 
 
-SRC = war.asm
+SRC = death.asm
 
 CC = ld
 OBJ = $(SRC:.asm=.o) 
 
-SRC_BONUS = war_bonus.asm
+SRC_BONUS = death_bonus.asm
 
 OBJ_BONUS = $(SRC_BONUS:.asm=.o)
 
-NAME = War
+NAME = Death
 
 all : $(NAME)
 
