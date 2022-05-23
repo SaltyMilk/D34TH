@@ -2,7 +2,7 @@
 global _start
 
 _start:
-	mov rax, 0x000000000000000a
+	mov rax, 0x00000000000a656e
 	push rax
 	mov rax, 0x656e616966756f53 ; Soufiane
 	push rax
@@ -19,9 +19,20 @@ _start:
 	mov rdx, rsp
 
 	call ft_str_replace
+	add rsp, 16
+	
+	mov rax, 0x000000000000656e; ne
+	push rax
+	mov rsi, rsp
+
+	mov rax, 0x0000000000002120
+	push rax
+	mov rdx, rsp
+	call ft_str_replace
+	
 	call ft_puts
 
-	add rsp, 24
+	add rsp, 16
 	
 	mov	rax, 0x3c;
 	mov rdi, 0
@@ -52,6 +63,12 @@ ft_str_replace:
 	cmp r11b, 0
 	jne fsr_inloop_cont
 	;if we reach this than it's time to replace
+	push rax 
+	call ft_rand ; replace only sometimes
+	cmp rax, 0
+	je fsr_random_exit
+	pop rax
+
 	xor rbx, rbx
 	fsr_replace_loop:
 	cmp byte[rdx + rbx], 0
@@ -64,6 +81,8 @@ ft_str_replace:
 	inc rbx
 
 	jmp fsr_replace_loop
+	fsr_random_exit:
+	pop rax
 	fsr_replace_loop_exit:
 
 	fsr_inloop_cont:
@@ -92,6 +111,64 @@ ft_strlen:
 		inc rax
 		jmp loop
 	strlen_exit:
+retn
+
+open_file:
+	xor rsi, rsi
+	xor rdx, rdx
+	mov rax, 2
+	syscall
+retn
+
+;puts
+ft_rand:
+	push r11
+	push r15
+	push rbx
+	push rcx
+	push r8
+	push r9
+	push r10
+	push rsi
+	push rdx
+	push rdi
+
+	mov rax, 0x00000000006d6f64
+	push rax
+	mov rax, 0x6e61722f7665642f ; /dev/random
+	push rax
+	mov rdi, rsp; char *filename
+	call open_file
+	mov rdi, rax
+	add rsp, 16
+	sub rsp, 1
+	
+	mov rsi, rsp
+	mov rdx, 1
+	mov rax, 0
+	syscall;read
+
+	cmp BYTE[rsp], 127
+	jae fr_one
+	fr_zero:
+	mov rax, 0
+	jmp fr_end
+	fr_one: 
+	mov rax, 1
+	fr_end:
+
+	add rsp, 1
+
+	pop rdi
+	pop rdx
+	pop rsi
+	pop r10
+	pop r9
+	pop r8
+	pop rcx
+	pop rbx
+	pop r15
+	pop r11
 retn
 
 ;puts
