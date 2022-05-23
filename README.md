@@ -23,7 +23,7 @@ So when ls gets infected every time you'll do a "ls", you're infecting your whol
 
 # Todo: 
 
-* Add unique fingerprint to signature ✅
+* metamorphic xor to mov  (ex: sometimes xor rax, rax =>  mov rax, 0) 
 
 # Run in docker (note : due to ducker's way of things, anti debugger feature might fail in docker...Prefer using a VM)
 ```
