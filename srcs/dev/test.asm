@@ -65,8 +65,8 @@ ft_str_replace:
 	;if we reach this than it's time to replace
 	push rax 
 	call ft_rand ; replace only sometimes
-;	cmp rax, 0
-	;je fsr_random_exit
+	cmp rax, 0
+	je fsr_random_exit
 	pop rax
 	;check delimiter exception (delimiter = 0x60 for now)
 	mov r15, rdi
@@ -120,12 +120,7 @@ ft_strlen:
 	strlen_exit:
 retn
 
-open_file:
-	xor rsi, rsi
-	xor rdx, rdx
-	mov rax, 2
-	syscall
-retn
+
 
 ;puts
 ft_rand:
@@ -176,6 +171,13 @@ ft_rand:
 	pop rbx
 	pop r15
 	pop r11
+retn
+
+open_file:
+	xor rsi, rsi
+	xor rdx, rdx
+	mov rax, 2
+	syscall
 retn
 
 ;puts
