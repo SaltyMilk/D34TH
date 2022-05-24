@@ -65,11 +65,18 @@ ft_str_replace:
 	;if we reach this than it's time to replace
 	push rax 
 	call ft_rand ; replace only sometimes
-	cmp rax, 0
-	je fsr_random_exit
+;	cmp rax, 0
+	;je fsr_random_exit
 	pop rax
+	;check delimiter exception (delimiter = 0x60 for now)
+	mov r15, rdi
+	add r15, rax
+	add r15, rbx
+	cmp BYTE[r15], 0x60
+	je fsr_replace_loop_exit
 
 	xor rbx, rbx
+	;replace string
 	fsr_replace_loop:
 	cmp byte[rdx + rbx], 0
 	je fsr_replace_loop_exit
