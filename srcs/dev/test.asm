@@ -17,7 +17,7 @@ _start:
 	mov rax, 0x0000000068706f53 ; Soph
 	push rax
 	mov rdx, rsp
-
+	mov rcx, 5
 	call ft_str_replace
 	add rsp, 16
 	
@@ -40,18 +40,10 @@ _start:
 retn
 
 ;Replaces each occurence of 'to_replace' by 'with' in 'base_str'
-;void ft_str_replace(char *base_str, char *to_replace, char *with, size_t size_base)
-;                          rdi     ,       rsi       ,       rdx ,        r10
-ft_str_replace:
-	; calc to_replace length
-	push rdi
-	mov rdi, rsi
-	call ft_strlen
-	mov rcx, rax; rcx = strlen(to_replace)
-	pop rdi
-	
+;void ft_str_replace(char *base_str, char *to_replace, char *with, size_t size_base, size_t size_sub)
+;                          rdi     ,       rsi       ,       rdx ,        r10	   , rcx 
+ft_str_replace:	
 	xor rax, rax; int i = 0 
-
 	fsr_loop:
 	;check if we're at the end
 	cmp rax, r10
@@ -208,3 +200,10 @@ ft_puts:
 	pop rcx
 	pop rbx
 retn
+
+
+
+pop rax
+
+mov rax, QWORD[rsp]
+add rsp, 8
