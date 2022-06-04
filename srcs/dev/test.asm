@@ -10,24 +10,25 @@ _start:
 	call ft_strlen
 	mov r10, rax; store size
 
-	mov rax, 0x0000000066756f53 ; Souf
+	mov rax, 0x0000006066756f53 ; Souf
 	push rax
 	mov rsi, rsp
 
-	mov rax, 0x0000000068706f53 ; Soph
+	mov rax, 0x0000006068706f53 ; Soph
 	push rax
 	mov rdx, rsp
-	mov rcx, 5
+	mov rcx, 4
 	call ft_str_replace
 	add rsp, 16
 	
-	mov rax, 0x000000000000656e; ne
+	mov rax, 0x000000000060656e; ne
 	push rax
 	mov rsi, rsp
 
-	mov rax, 0x0000000000002120
+	mov rax, 0x0000000000602120; a!
 	push rax
 	mov rdx, rsp
+	mov rcx, 2
 	call ft_str_replace
 	
 	call ft_puts
@@ -52,7 +53,7 @@ ft_str_replace:
 	xor rbx, rbx; int j = 0;
 	fsr_inloop: ; let's check if we can find the str to_replace
 	mov r11b, [rsi + rbx]
-	cmp r11b, 0
+	cmp r11b, 0x60
 	jne fsr_inloop_cont
 	;if we reach this than it's time to replace
 	push rax 
@@ -70,7 +71,8 @@ ft_str_replace:
 	xor rbx, rbx
 	;replace string
 	fsr_replace_loop:
-	cmp byte[rdx + rbx], 0
+	
+	cmp rbx, rcx
 	je fsr_replace_loop_exit
 	mov r15, rdi
 	add r15, rax
