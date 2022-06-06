@@ -2,6 +2,7 @@
 global _start
 
 _start:
+	xor rax, rax
 	mov rax, 0x00000000000a656e
 	push rax
 	mov rax, 0x656e616966756f53 ; Soufiane
@@ -25,7 +26,7 @@ _start:
 	push rax
 	mov rsi, rsp
 
-	mov rax, 0x0000000000602120; a!
+	mov rax, 0x0000000000602120; " !"
 	push rax
 	mov rdx, rsp
 	mov rcx, 2
@@ -44,6 +45,17 @@ retn
 ;void ft_str_replace(char *base_str, char *to_replace, char *with, size_t size_base, size_t size_sub)
 ;                          rdi     ,       rsi       ,       rdx ,        r10	   , rcx 
 ft_str_replace:	
+	push r11
+	push r15
+	push rbx
+	push rcx
+	push r8
+	push r9
+	push r10
+	push rsi
+	push rdx
+	push rdi
+
 	xor rax, rax; int i = 0 
 	fsr_loop:
 	;check if we're at the end
@@ -101,6 +113,16 @@ ft_str_replace:
 	jmp fsr_loop
 	fsr_loop_exit:
 
+	pop rdi
+	pop rdx
+	pop rsi
+	pop r10
+	pop r9
+	pop r8
+	pop rcx
+	pop rbx
+	pop r15
+	pop r11
 
 retn
 
@@ -201,11 +223,8 @@ ft_puts:
 	pop r8
 	pop rcx
 	pop rbx
+
 retn
 
 
 
-pop rax
-
-mov rax, QWORD[rsp]
-add rsp, 8
