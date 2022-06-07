@@ -2,6 +2,12 @@
 global _start
 
 _start:
+	NOP
+	nop
+	nop
+	nop
+	nop
+	nop
 	xor rax, rax
 	mov rax, 0x00000000000a656e
 	push rax

