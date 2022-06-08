@@ -25,7 +25,7 @@ So when ls gets infected every time you'll do a "ls", you're infecting your whol
 
 * metamorphic xor to mov  (ex: sometimes xor rax, rax =>  mov rax, 0) ✅
 * expand xor to mov meta' to other used registers than rax
-* junk data (inc rax; dec rax or 6x NOP)
+* junk data (inc rax; dec rax or 6x NOP) ✅
 
 # Run in docker (note : due to ducker's way of things, anti debugger feature might fail in docker...Prefer using a VM)
 ```
