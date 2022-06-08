@@ -3,6 +3,8 @@ global _start
 
 _start:
 
+	mov r9, 0
+
 	xor rax, rax
 	mov rax, 0x000000000000000a
 	push rax
