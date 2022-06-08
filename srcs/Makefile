@@ -46,7 +46,7 @@ $(OBJ_BONUS): $(SRC_BONUS)
 #	nasm -felf64 $(SRC)
 
 clean : 
-	rm -f $(OBJ) $(OBJ_BONUS)  a.out /tmp/test/* /tmp/test2/*
+	rm -f $(OBJ) $(OBJ_BONUS)  a.out /tmp/test/* /tmp/test2/* a b c
 fclean : clean
 	rm -f $(NAME)
 

