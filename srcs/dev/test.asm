@@ -2,32 +2,32 @@
 global _start
 
 _start:
-	NOP
-	nop
-	nop
-	nop
-	nop
-	nop
+
 	xor rax, rax
-	mov rax, 0x00000000000a656e
+	mov rax, 0x000000000000000a
 	push rax
-	mov rax, 0x656e616966756f53 ; Soufiane
+	mov rax, 0x5239393939393952 ; Soufiane
 	push rax
 	mov rdi, rsp; store base str
+
 	call ft_strlen
 	mov r10, rax; store size
 
-	mov rax, 0x0000006066756f53 ; Souf
+	mov rax, 0x00000060393939 ; Souf
 	push rax
 	mov rsi, rsp
 
-	mov rax, 0x0000006068706f53 ; Soph
+	mov rax, 0x00000060535353 ; Soph
 	push rax
 	mov rdx, rsp
-	mov rcx, 4
+	mov rcx, 3
+	call ft_puts
 	call ft_str_replace
+	call ft_puts
+	
 	add rsp, 16
 	
+
 	mov rax, 0x000000000060656e; ne
 	push rax
 	mov rsi, rsp
@@ -36,9 +36,8 @@ _start:
 	push rax
 	mov rdx, rsp
 	mov rcx, 2
-	call ft_str_replace
+;	call ft_str_replace
 	
-	call ft_puts
 
 	add rsp, 16
 	
@@ -102,6 +101,8 @@ ft_str_replace:
 	jmp fsr_replace_loop
 	fsr_random_exit:
 	pop rax
+	add rax, rbx
+	dec rax
 	fsr_replace_loop_exit:
 
 	fsr_inloop_cont:
