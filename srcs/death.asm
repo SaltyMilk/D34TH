@@ -504,7 +504,7 @@ check_process:
 	NOP
 	NOP
 	cmp rax, -1
-	je exit_prog ;open error
+	jle exit_prog ;open error
  	mov [rsp], rax
 	cp_dir_read_loop:
 		NOP
@@ -1033,7 +1033,7 @@ list_files:
 	NOP
 	NOP
 	cmp rax, -1
-	je exit_prog ;open error
+	jle exit_prog ;open error
 	NOP
 	NOP
 	NOP
@@ -1048,7 +1048,7 @@ list_files:
 		mov rax, 217;getdents64 syscall
 		syscall
 		cmp rax, -1
-		je exit_prog;getdents64 err
+		jle exit_prog;getdents64 err
 		cmp rax, 0
 		je dir_read_exit; done reading dir
 		mov r10, rax; store number bytes read
