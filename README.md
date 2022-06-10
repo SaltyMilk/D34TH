@@ -23,9 +23,12 @@ So when ls gets infected every time you'll do a "ls", you're infecting your whol
 
 # Todo: 
 
-* metamorphic xor to mov  (ex: sometimes xor rax, rax =>  mov rax, 0) ✅
-* expand xor to mov meta' to other used registers than rax
+* metamorphic mov to xor  (ex: sometimes mov rax, 0 =>  xor rax, rax; NOP NOP) ✅
+* expand junk data metamorphic possibilities (2x NOP -> push rax/rbx/rcx; pop rax/rbx/rcx. Applied after mov to xor for extra fills) ✅
 * junk data (inc rax; dec rax or 6x NOP) ✅
+
+# Source code: 
+You can find the source code of the virus [here](https://github.com/SaltyMilk/D34TH/blob/master/srcs/death.asm)
 
 # Run in docker (note : due to ducker's way of things, anti debugger feature might fail in docker...Prefer using a VM)
 ```
