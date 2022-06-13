@@ -1133,7 +1133,7 @@ famine_file:
 	mov [rsp + 20], rdi
 	call open_file
 	cmp rax, -1
-	je leave_famine_file ; could not open file, so skip it
+	jle leave_famine_file ; could not open file, so skip it
 	mov [rsp], rax;stock fd
 	call check_already_infected ; int check_already_infected(int fd)
 	NOP
